@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace GenericList
 {
-    internal class GenericListEnumerator<X> : IEnumerator<X>
+    public class GenericListEnumerator<X> : IEnumerator<X>
     {
 
         private GenericList<X> genericList;

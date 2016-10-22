@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using GenericList;
 
 namespace Pong
 {
@@ -44,6 +45,10 @@ namespace Pong
         /// </summary>
         public Song Music{ get; private set; }
 
+        /// <summary>
+        /// Generic list that holds Sprites that should be drawn on screen.
+        /// </summary>
+        private GenericList<Sprite> SpritesForDrawList = new GenericList<Sprite>();
 
 
         public Game1()
@@ -64,7 +69,31 @@ namespace Pong
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            var screenBounds = GraphicsDevice.Viewport.Bounds;
+
+            PaddleBottom = new Paddle(GameConstants.PaddleDefaultWidth,
+            GameConstants.PaddleDefaulHeight, GameConstants.PaddleDefaulSpeed);
+            PaddleBottom.X = GameConstants.PaddleBottomXPostionInital;
+            PaddleBottom.Y = GameConstants.PaddleBottomYPositionInital;
+
+            PaddleTop = new Paddle(GameConstants.PaddleDefaultWidth,
+            GameConstants.PaddleDefaulHeight, GameConstants.PaddleDefaulSpeed);
+            PaddleTop.X = GameConstants.PaddleTopXPostionInital;
+            PaddleTop.Y = GameConstants.PaddleTopYPositionInital;
+
+            Ball = new Ball(GameConstants.DefaultBallSize,
+            GameConstants.DefaultInitialBallSpeed,
+            GameConstants.DefaultBallBumpSpeedIncreaseFactor)
+            {
+                X = GameConstants.TextureMiddleWidth,
+                Y = GameConstants.TextureMiddleHeight
+            };
+            Background = new Background( GameConstants.TextureWidth, GameConstants.TextureHeight);
+
+            SpritesForDrawList.Add(Background);
+            SpritesForDrawList.Add(PaddleBottom);
+            SpritesForDrawList.Add(PaddleTop);
+            SpritesForDrawList.Add(Ball);
 
             base.Initialize();
         }
@@ -78,7 +107,22 @@ namespace Pong
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            // Initialize new SpriteBatch object which will be used to draw textures .
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // Set textures
+            Texture2D paddleTexture = Content.Load<Texture2D>("Paddle");
+            PaddleBottom.Texture = paddleTexture;
+            PaddleTop.Texture = paddleTexture;
+            Ball.Texture = Content.Load<Texture2D>("Ball");
+            Background.Texture = Content.Load<Texture2D>("Background");
+            
+            // Load sounds
+            // Start background music
+            HitSound = Content.Load<SoundEffect>("Hit");
+            Music = Content.Load<Song>("Music");
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(Music);
         }
 
         /// <summary>
@@ -111,10 +155,16 @@ namespace Pong
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
 
-            // TODO: Add your drawing code here
+            for (int i = 0; i < SpritesForDrawList.Count; i++)
+            {
+                SpritesForDrawList.GetElement(i).DrawSpriteOnScreen(spriteBatch);
+            }
 
+            //End drawing.
+            //Send all gathered details to the graphic card in one batch.
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

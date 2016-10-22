@@ -29,7 +29,7 @@ namespace Pong
             Width = width;
         }
 
-
+        
         /// <summary >
         /// Base draw method
         /// </ summary >

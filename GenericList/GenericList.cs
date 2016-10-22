@@ -5,9 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace GenericList
 {
-    class GenericList<X> : IGenericList<X>
+    public class GenericList<X> : IGenericList<X>
     {
         private X[] _internalStorage;
 
