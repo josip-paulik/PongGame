@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace Pong
 {
@@ -12,9 +14,45 @@ namespace Pong
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        /// <summary>
+        /// The bottom paddle object.
+        /// </summary>
+        public Paddle PaddleBottom { get; private set; }
+
+        /// <summary>
+        /// The top paddle object.
+        /// </summary>
+        public Paddle PaddleTop { get; private set; }
+
+        /// <summary>
+        /// Ball object.
+        /// </summary>
+        public Ball Ball { get; private set; }
+
+        /// <summary>
+        /// Background image.
+        /// </summary>
+        public Background Background { get; private set; }
+
+        /// <summary>
+        /// Sound when the ball hits.
+        /// </summary>
+        public SoundEffect HitSound { get; private set; }
+
+        /// <summary>
+        /// Background music.
+        /// </summary>
+        public Song Music{ get; private set; }
+
+
+
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferHeight = 900,
+                PreferredBackBufferWidth = 500
+            };
             Content.RootDirectory = "Content";
         }
 
