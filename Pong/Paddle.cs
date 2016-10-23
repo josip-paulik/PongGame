@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pong
 {
-    public class Paddle : Sprite
+    public class Paddle : Sprite, IPhysicalObject2D
     {
         /// <summary>
         /// Current speed of paddle

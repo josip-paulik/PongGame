@@ -11,7 +11,7 @@ namespace Pong
     /// <summary>
     /// Game representation of ball
     /// </summary>
-    public class Ball : Sprite
+    public class Ball : Sprite, IPhysicalObject2D
     {
         /// <summary>
         /// Defines current ball speed.

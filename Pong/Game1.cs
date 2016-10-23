@@ -55,8 +55,8 @@ namespace Pong
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferHeight = 900,
-                PreferredBackBufferWidth = 500
+                PreferredBackBufferHeight = GameConstants.TextureHeight,
+                PreferredBackBufferWidth = GameConstants.TextureWidth
             };
             Content.RootDirectory = "Content";
         }
@@ -85,8 +85,8 @@ namespace Pong
             GameConstants.DefaultInitialBallSpeed,
             GameConstants.DefaultBallBumpSpeedIncreaseFactor)
             {
-                X = GameConstants.TextureMiddleWidth,
-                Y = GameConstants.TextureMiddleHeight
+                X = GameConstants.TextureWidth / 2,
+                Y = 450
             };
             Background = new Background( GameConstants.TextureWidth, GameConstants.TextureHeight);
 
@@ -111,16 +111,16 @@ namespace Pong
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Set textures
-            Texture2D paddleTexture = Content.Load<Texture2D>("Paddle");
+            Texture2D paddleTexture = Content.Load<Texture2D>("paddle");
             PaddleBottom.Texture = paddleTexture;
             PaddleTop.Texture = paddleTexture;
-            Ball.Texture = Content.Load<Texture2D>("Ball");
-            Background.Texture = Content.Load<Texture2D>("Background");
+            Ball.Texture = Content.Load<Texture2D>("ball");
+            Background.Texture = Content.Load<Texture2D>("background");
             
             // Load sounds
             // Start background music
-            HitSound = Content.Load<SoundEffect>("Hit");
-            Music = Content.Load<Song>("Music");
+            HitSound = Content.Load<SoundEffect>("hit");
+            Music = Content.Load<Song>("music");
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(Music);
         }
@@ -144,7 +144,34 @@ namespace Pong
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            var touchState = Keyboard.GetState();
+            if (touchState.IsKeyDown(Keys.Left))
+            {
+                PaddleBottom.X = PaddleBottom.X - (float)(PaddleBottom.Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
+                PaddleBottom.X = MathHelper.Clamp(PaddleBottom.X, 0, GameConstants.TextureWidth - PaddleBottom.Width);
+            }
+
+            if (touchState.IsKeyDown(Keys.Right))
+            {
+                PaddleBottom.X = PaddleBottom.X + (float)(PaddleBottom.Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
+            }
+            PaddleBottom.X = MathHelper.Clamp(PaddleBottom.X, 0, GameConstants.TextureWidth - PaddleBottom.Width);
+
+            if (touchState.IsKeyDown(Keys.A))
+            {
+                PaddleTop.X = PaddleTop.X - (float)(PaddleTop.Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
+            }
+            PaddleTop.X = MathHelper.Clamp(PaddleTop.X, 0, GameConstants.TextureWidth - PaddleTop.Width);
+
+            if (touchState.IsKeyDown(Keys.D))
+            {
+                PaddleTop.X = PaddleTop.X + (float)(PaddleTop.Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
+            }
+            PaddleTop.X = MathHelper.Clamp(PaddleTop.X, 0, GameConstants.TextureWidth - PaddleTop.Width);
+
+            var ballPositionChange = Ball.Direction * (float)(gameTime.ElapsedGameTime.TotalMilliseconds * Ball.Speed);
+            Ball.X += ballPositionChange.X;
+            Ball.Y += ballPositionChange.Y;
 
             base.Update(gameTime);
         }

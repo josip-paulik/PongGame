@@ -12,15 +12,16 @@ namespace Pong
         public const int PaddleDefaultWidth = 200;
         public const int PaddleDefaulHeight = 20;
 
-        public const int TextureWidth = 900;
-        public const int TextureHeight = 500;
+        public const int TextureWidth = 500;
+        public const int TextureHeight = 900;
+
         public const int TextureMiddleWidth = TextureWidth / 2;
         public const int TextureMiddleHeight = TextureHeight / 2;
 
-        public const float PaddleBottomXPostionInital = 250;
-        public const float PaddleBottomYPositionInital = 900;
+        public const float PaddleBottomXPostionInital = 250 - 20;
+        public const float PaddleBottomYPositionInital = 880;
 
-        public const float PaddleTopXPostionInital = 250;
+        public const float PaddleTopXPostionInital = 250 - 20;
         public const float PaddleTopYPositionInital = 0;
 
         

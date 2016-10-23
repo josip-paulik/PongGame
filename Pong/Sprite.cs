@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pong
 {
-    public class Sprite
+    public class Sprite : IPhysicalObject2D
     {
         public float X { get; set; }
         public float Y { get; set; }
