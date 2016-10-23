@@ -24,14 +24,14 @@ namespace Pong
         /// Defines ball speed direction.
         /// Valid values: (1, 1), (-1, -1), (-1, 1), (1, -1)
         /// </summary>
-        public SafeVector2 Direction { get; set; }
+        public Vector2 Direction { get; set; }
 
         public Ball(int size, float speed, float defaultBumpSpeedIncreaseFactor) : base(size, size)
         {
             Speed = speed;
             BumpSpeedIncreaseFactor = defaultBumpSpeedIncreaseFactor;
             //Inital direction
-            Direction = new SafeVector2(1, 1);
+            Direction = new Vector2(1, 1);
         }
     }
 }

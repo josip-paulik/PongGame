@@ -24,7 +24,7 @@ namespace Pong
         public const float PaddleTopXPostionInital = 250 - 20;
         public const float PaddleTopYPositionInital = 0;
 
-        
+        public const int WallDefaultSize = 100; 
 
         public const float DefaultInitialBallSpeed = 0.4f;
         public const float DefaultBallBumpSpeedIncreaseFactor = 1.05f;

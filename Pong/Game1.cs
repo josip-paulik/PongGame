@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using GenericList;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Pong
 {
@@ -95,16 +96,27 @@ namespace Pong
             GameConstants.DefaultInitialBallSpeed,
             GameConstants.DefaultBallBumpSpeedIncreaseFactor)
             {
-                X = GameConstants.TextureWidth / 2,
-                Y = 450
+                X = screenBounds.Height / 2,
+                Y = screenBounds.Width / 2
             };
-            Background = new Background( GameConstants.TextureWidth, GameConstants.TextureHeight);
+            Background = new Background( screenBounds.Width, screenBounds.Height);
 
             SpritesForDrawList.Add(Background);
             SpritesForDrawList.Add(PaddleBottom);
             SpritesForDrawList.Add(PaddleTop);
             SpritesForDrawList.Add(Ball);
 
+            Walls = new List<Wall>()
+            {
+                new Wall(-GameConstants.WallDefaultSize, 0, GameConstants.WallDefaultSize, screenBounds.Height),
+                new Wall (screenBounds.Right, 0, GameConstants.WallDefaultSize, screenBounds.Height),
+            };
+
+            Goals = new List<Wall>()
+            {
+                new Wall(0, screenBounds.Height, screenBounds.Width, GameConstants.WallDefaultSize),
+                new Wall(screenBounds.Top, -GameConstants.WallDefaultSize, screenBounds.Width, GameConstants.WallDefaultSize),
+            };
             base.Initialize();
         }
 
@@ -158,8 +170,8 @@ namespace Pong
             if (touchState.IsKeyDown(Keys.Left))
             {
                 PaddleBottom.X = PaddleBottom.X - (float)(PaddleBottom.Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
-                PaddleBottom.X = MathHelper.Clamp(PaddleBottom.X, 0, GameConstants.TextureWidth - PaddleBottom.Width);
             }
+            PaddleBottom.X = MathHelper.Clamp(PaddleBottom.X, 0, GameConstants.TextureWidth - PaddleBottom.Width);
 
             if (touchState.IsKeyDown(Keys.Right))
             {
@@ -182,6 +194,22 @@ namespace Pong
             var ballPositionChange = Ball.Direction * (float)(gameTime.ElapsedGameTime.TotalMilliseconds * Ball.Speed);
             Ball.X += ballPositionChange.X;
             Ball.Y += ballPositionChange.Y;
+
+            // Ball - side walls
+            if (Walls.Any(w => CollisionDetector.Overlaps(Ball, w)))
+            {
+                Ball.Direction.X = -1 * Ball.Direction.X;
+                Ball.Speed = Ball.Speed * Ball.BumpSpeedIncreaseFactor;
+            }
+
+            // Ball - winning walls
+            if (Goals.Any(w => CollisionDetector.Overlaps(Ball, w)))
+            {
+                Ball.X = GameConstants.TextureWidth / 2;
+                Ball.Y = GameConstants.TextureHeight / 2;
+                Ball.Speed = GameConstants.DefaultInitialBallSpeed;
+                HitSound.Play();
+            }
 
             base.Update(gameTime);
         }
