@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Background.cs" />
     <Compile Include="Ball.cs" />
+    <Compile Include="CollisionDetector.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameConstants.cs" />
     <Compile Include="IPhysicalObject2D.cs" />

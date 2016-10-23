@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using GenericList;
+using System.Collections.Generic;
 
 namespace Pong
 {
@@ -50,6 +51,15 @@ namespace Pong
         /// </summary>
         private GenericList<Sprite> SpritesForDrawList = new GenericList<Sprite>();
 
+        /// <summary>
+        /// Walls on the sides.
+        /// </summary>
+        public List<Wall> Walls { get; set; }
+
+        /// <summary>
+        /// Walls behind paddles.
+        /// </summary>
+        public List<Wall> Goals { get; set; }
 
         public Game1()
         {
