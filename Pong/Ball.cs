@@ -13,10 +13,37 @@ namespace Pong
     /// </summary>
     public class Ball : Sprite, IPhysicalObject2D
     {
+
+
         /// <summary>
         /// Defines current ball speed.
         /// </summary>
-        public float Speed { get; set; }
+        private float _speed;
+
+        public float Speed
+        {
+            get
+            {
+                return _speed;
+            }
+            set
+            {
+                if(value > GameConstants.BallMaxSpeed)
+                {
+                    _speed = GameConstants.BallMaxSpeed;
+                }
+            }
+        }
+
+        private int myVar;
+
+        public int MyProperty
+        {
+            get { return myVar; }
+            set { myVar = value; }
+        }
+
+
 
         public float BumpSpeedIncreaseFactor { get; set; }
 
@@ -24,14 +51,14 @@ namespace Pong
         /// Defines ball speed direction.
         /// Valid values: (1, 1), (-1, -1), (-1, 1), (1, -1)
         /// </summary>
-        public Vector2 Direction { get; set; }
+        public SafeVector2 Direction { get; set; }
 
         public Ball(int size, float speed, float defaultBumpSpeedIncreaseFactor) : base(size, size)
         {
             Speed = speed;
             BumpSpeedIncreaseFactor = defaultBumpSpeedIncreaseFactor;
             //Inital direction
-            Direction = new Vector2(1, 1);
+            Direction = new SafeVector2(1, 1);
         }
     }
 }

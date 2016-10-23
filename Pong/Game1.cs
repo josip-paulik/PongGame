@@ -60,7 +60,8 @@ namespace Pong
         /// <summary>
         /// Walls behind paddles.
         /// </summary>
-        public List<Wall> Goals { get; set; }
+        public List<Wall> Goals { get; set; }
+
 
         public Game1()
         {
@@ -104,18 +105,20 @@ namespace Pong
             SpritesForDrawList.Add(Background);
             SpritesForDrawList.Add(PaddleBottom);
             SpritesForDrawList.Add(PaddleTop);
-            SpritesForDrawList.Add(Ball);
+            SpritesForDrawList.Add(Ball);
+
 
             Walls = new List<Wall>()
             {
-                new Wall(-GameConstants.WallDefaultSize, 0, GameConstants.WallDefaultSize, screenBounds.Height),
-                new Wall (screenBounds.Right, 0, GameConstants.WallDefaultSize, screenBounds.Height),
+                new Wall(0, 0, GameConstants.WallDefaultSize, screenBounds.Height),
+                new Wall (screenBounds.Right, 0, GameConstants.WallDefaultSize, GameConstants.TextureHeight),
+
             };
 
             Goals = new List<Wall>()
             {
                 new Wall(0, screenBounds.Height, screenBounds.Width, GameConstants.WallDefaultSize),
-                new Wall(screenBounds.Top, -GameConstants.WallDefaultSize, screenBounds.Width, GameConstants.WallDefaultSize),
+                new Wall(screenBounds.Top, 0, screenBounds.Width, GameConstants.WallDefaultSize),
             };
             base.Initialize();
         }
@@ -144,7 +147,8 @@ namespace Pong
             HitSound = Content.Load<SoundEffect>("hit");
             Music = Content.Load<Song>("music");
             MediaPlayer.IsRepeating = true;
-            MediaPlayer.Play(Music);
+            MediaPlayer.Play(Music);
+
         }
 
         /// <summary>
@@ -166,6 +170,7 @@ namespace Pong
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            #region Keyboard inputs, move paddle.
             var touchState = Keyboard.GetState();
             if (touchState.IsKeyDown(Keys.Left))
             {
@@ -190,11 +195,9 @@ namespace Pong
                 PaddleTop.X = PaddleTop.X + (float)(PaddleTop.Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
             }
             PaddleTop.X = MathHelper.Clamp(PaddleTop.X, 0, GameConstants.TextureWidth - PaddleTop.Width);
+            #endregion
 
-            var ballPositionChange = Ball.Direction * (float)(gameTime.ElapsedGameTime.TotalMilliseconds * Ball.Speed);
-            Ball.X += ballPositionChange.X;
-            Ball.Y += ballPositionChange.Y;
-
+            #region Ball hits things.
             // Ball - side walls
             if (Walls.Any(w => CollisionDetector.Overlaps(Ball, w)))
             {
@@ -210,6 +213,22 @@ namespace Pong
                 Ball.Speed = GameConstants.DefaultInitialBallSpeed;
                 HitSound.Play();
             }
+
+            // Paddle - ball collision
+            if (CollisionDetector.Overlaps(Ball, PaddleTop) && Ball.Direction.Y < 0
+            || (CollisionDetector.Overlaps(Ball, PaddleBottom) && Ball.Direction.Y > 0))
+            {
+                Ball.Direction.Y = -Ball.Direction.Y;
+                Ball.Speed *= Ball.BumpSpeedIncreaseFactor;
+            }
+
+            #endregion
+
+            #region Ball moves
+            var ballPositionChange = Ball.Direction * (float)(gameTime.ElapsedGameTime.TotalMilliseconds * Ball.Speed);
+            Ball.X += ballPositionChange.X;
+            Ball.Y += ballPositionChange.Y;
+            #endregion
 
             base.Update(gameTime);
         }
