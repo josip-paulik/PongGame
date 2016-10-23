@@ -8,9 +8,12 @@ namespace Pong
 {
     class CollisionDetector
     {
+        
         public static bool Overlaps(IPhysicalObject2D a, IPhysicalObject2D b)
         {
-            if (a.X == b.X || a.Y == b.Y)
+            double distance;
+
+            if (distance < 10)
             {
                 return true;
             }

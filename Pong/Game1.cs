@@ -97,8 +97,8 @@ namespace Pong
             GameConstants.DefaultInitialBallSpeed,
             GameConstants.DefaultBallBumpSpeedIncreaseFactor)
             {
-                X = screenBounds.Height / 2,
-                Y = screenBounds.Width / 2
+                X = screenBounds.Center.X,
+                Y = screenBounds.Center.Y
             };
             Background = new Background( screenBounds.Width, screenBounds.Height);
 
@@ -170,32 +170,39 @@ namespace Pong
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            var screenBounds = GraphicsDevice.Viewport.Bounds;
+
             #region Keyboard inputs, move paddle.
+            #region Bottom paddle.
             var touchState = Keyboard.GetState();
             if (touchState.IsKeyDown(Keys.Left))
             {
-                PaddleBottom.X = PaddleBottom.X - (float)(PaddleBottom.Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
+                PaddleBottom.X = PaddleBottom.X - (int)(PaddleBottom.Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
             }
-            PaddleBottom.X = MathHelper.Clamp(PaddleBottom.X, 0, GameConstants.TextureWidth - PaddleBottom.Width);
+            
 
             if (touchState.IsKeyDown(Keys.Right))
             {
-                PaddleBottom.X = PaddleBottom.X + (float)(PaddleBottom.Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
+                PaddleBottom.X = PaddleBottom.X + (int)(PaddleBottom.Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
             }
-            PaddleBottom.X = MathHelper.Clamp(PaddleBottom.X, 0, GameConstants.TextureWidth - PaddleBottom.Width);
+            PaddleBottom.X = MathHelper.Clamp(PaddleBottom.X, 0, screenBounds.Right - PaddleBottom.Width);
+            #endregion
 
+            #region Top paddle
             if (touchState.IsKeyDown(Keys.A))
             {
-                PaddleTop.X = PaddleTop.X - (float)(PaddleTop.Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
+                PaddleTop.X = PaddleTop.X - (int)(PaddleTop.Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
             }
-            PaddleTop.X = MathHelper.Clamp(PaddleTop.X, 0, GameConstants.TextureWidth - PaddleTop.Width);
+            
 
             if (touchState.IsKeyDown(Keys.D))
             {
-                PaddleTop.X = PaddleTop.X + (float)(PaddleTop.Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
+                PaddleTop.X = PaddleTop.X + (int)(PaddleTop.Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
             }
-            PaddleTop.X = MathHelper.Clamp(PaddleTop.X, 0, GameConstants.TextureWidth - PaddleTop.Width);
+            PaddleTop.X = MathHelper.Clamp(PaddleTop.X, 0, screenBounds.Right - PaddleTop.Width);
             #endregion
+            #endregion
+
 
             #region Ball hits things.
             // Ball - side walls
@@ -214,7 +221,7 @@ namespace Pong
                 HitSound.Play();
             }
 
-            // Paddle - ball collision
+            // Ball - paddles
             if (CollisionDetector.Overlaps(Ball, PaddleTop) && Ball.Direction.Y < 0
             || (CollisionDetector.Overlaps(Ball, PaddleBottom) && Ball.Direction.Y > 0))
             {
@@ -223,11 +230,11 @@ namespace Pong
             }
 
             #endregion
-
+            
             #region Ball moves
             var ballPositionChange = Ball.Direction * (float)(gameTime.ElapsedGameTime.TotalMilliseconds * Ball.Speed);
-            Ball.X += ballPositionChange.X;
-            Ball.Y += ballPositionChange.Y;
+            Ball.X += (int)ballPositionChange.X;
+            Ball.Y += (int)ballPositionChange.Y;
             #endregion
 
             base.Update(gameTime);

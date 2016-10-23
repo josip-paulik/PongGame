@@ -21,7 +21,7 @@ namespace Pong
         /// </ summary >
         public Texture2D Texture { get; set; }
 
-        protected Sprite(int width, int height, float x = 0, float y = 0)
+        protected Sprite(int width, int height, int x = 0, int y = 0)
         {
             X = x;
             Y = y;

@@ -35,14 +35,6 @@ namespace Pong
             }
         }
 
-        private int myVar;
-
-        public int MyProperty
-        {
-            get { return myVar; }
-            set { myVar = value; }
-        }
-
 
 
         public float BumpSpeedIncreaseFactor { get; set; }
@@ -55,7 +47,7 @@ namespace Pong
 
         public Ball(int size, float speed, float defaultBumpSpeedIncreaseFactor) : base(size, size)
         {
-            Speed = speed;
+            _speed = speed;
             BumpSpeedIncreaseFactor = defaultBumpSpeedIncreaseFactor;
             //Inital direction
             Direction = new SafeVector2(1, 1);

@@ -13,7 +13,7 @@ namespace Pong
         public int Height { get; set; }
         public int Width { get; set; }
 
-        public Wall(float x, float y, int width, int height)
+        public Wall(int x, int y, int width, int height)
         {
             X = x;
             Y = y;
