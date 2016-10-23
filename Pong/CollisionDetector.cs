@@ -11,6 +11,7 @@ namespace Pong
     {
         ///<summary>
         ///This is algorithm called bounding box test which assumes two bodies are square.
+        ///And in our case, all of our bodies are squares.
         ///</summary>
         public static bool Overlaps(IPhysicalObject2D a, IPhysicalObject2D b)
         {
